@@ -1,0 +1,297 @@
+Fractal artwork used under the GPL 3.0 License from <a href="http://opengameart.org/content/fractal-alien-landscape-pack">http://opengameart.org/content/fractal-alien-landscape-pack</a>
+Download link for complete project [zva-file-link id=3743 text="Link here"][/zva-file-link].
+<h6>Learn online to create Unity games</h6>
+<a href="https://academy.zenva.com/product/game-development-with-unity-5/?zva_src=gda-jesse-how-to-game-1">The Ultimate Unity 5 Game Development Course</a> is your one-stop resource to learn all the basics of this fantastic framework so you can start making games in no time!
+
+Today, we will be taking the design concept we made in part 1 and actually be developing the game. Whilst this game will not be of AAA quality, it will show the fundamentals of game design and implementation. We will be using concepts learned from all of my previous tutorials in some way, shape, or form to be creating this game. For example; we could use JSON or XML file format for saving data, algorithms for the missiles flying at the player from random directions, and so much more.
+Today, we will focus on the primary game play for this game. That means, we will be working in a single scene. We will also only implement the scripts needed to get the base game to run.
+I hope you are as excited as I am about this tutorial. It has been quite a few months and tutorials to lead up to this one. So, let’s jump right on in and start developing this long awaited game.
+<h5>Part 1: Setting up the game skeleton</h5>
+This one should be fairly obvious for all of us now. We need to first set up the skeleton of the whole project within the Unity3D editor. This can be as complete as you want it to be, but I like to start with the bare essentials. The bare essentials are the scripts, art, prefabs, and scene folders.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/1-9/" rel="attachment wp-att-3716"><img class="alignnone size-full wp-image-3716" src="https://gamedevacademy.org/wp-content/uploads/2016/04/1.png" alt="1" width="1366" height="768" /></a>
+
+Next up, we take all of the art that we have gathered / created and place them into the art folder. This includes the voxel jet, voxel missile, and the fractal art from open game art.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/2-9/" rel="attachment wp-att-3717"><img class="alignnone size-full wp-image-3717" src="https://gamedevacademy.org/wp-content/uploads/2016/04/2.png" alt="2" width="1600" height="900" /></a>
+
+We now save our base scene and call it “Game Play Screen”.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/3-9/" rel="attachment wp-att-3718"><img class="alignnone size-full wp-image-3718" src="https://gamedevacademy.org/wp-content/uploads/2016/04/3.png" alt="3" width="1366" height="768" /></a>
+
+Okay, now we can set up our scripts skeleton that we may or may not fully utilize when creating the game. The scripts we need are boundary, player controller, missile controller, destroy missile, and scroll plane.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/4-10/" rel="attachment wp-att-3719"><img class="alignnone size-full wp-image-3719" src="https://gamedevacademy.org/wp-content/uploads/2016/04/4.png" alt="4" width="1366" height="768" /></a>
+
+We should now set up our prefabs, our prefabs will consist of the player ship and the missile at the present time. This is how they should be scaled and look.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/5-9/" rel="attachment wp-att-3720"><img class="alignnone size-full wp-image-3720" src="https://gamedevacademy.org/wp-content/uploads/2016/04/5.png" alt="5" width="1366" height="768" /></a>
+
+Now we delete the missile prefab from the Hierarchy pane. It should still be in the prefabs folder, make sure not to delete it.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/6-9/" rel="attachment wp-att-3721"><img class="alignnone size-full wp-image-3721" src="https://gamedevacademy.org/wp-content/uploads/2016/04/6.png" alt="6" width="1366" height="768" /></a>
+
+In the art folder, fractal sub directory; Make sure the fractal texture is set to texture, wrap mode of repeat, and a filter mode of trilinear. The name of the texture we will be using is fractal smoke.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/7-8/" rel="attachment wp-att-3714"><img class="alignnone size-full wp-image-3714" src="https://gamedevacademy.org/wp-content/uploads/2016/04/7.png" alt="7" width="1366" height="768" /></a>
+
+Create a plane that is 100 x 100 x 100, y position set at -38.23, z position at 545.27. Attach the fractal image called fractal smoke to the plane.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/8-6/" rel="attachment wp-att-3715"><img class="alignnone size-full wp-image-3715" src="https://gamedevacademy.org/wp-content/uploads/2016/04/8.png" alt="8" width="1366" height="768" /></a>
+
+Our base game skeleton is now complete. We can now begin working on the game itself. This is where the fun begins!
+<h5>Part 2:  Choosing where to begin</h5>
+Before we can really move forward, we need to decide if the back end or front end is of the most importance. A visually based person may decide to go with the front end first and then work on the back end. A person with a mind and knack for the abstract will go with the back end first. We will go with back end first because it is the industry standard. It is the industry standard because art, music, and mechanics may change throughout the development process; Back end can easily be scaled and modified to fit the new ideas whilst front end will struggle with it.
+
+With this game, the back end will be setting up the game boundaries, the missile controller, the player controller, background controller, and the destruction script. So, before we jump into the code, we should specify this information.
+<h6>Section 1: Game Boundaries</h6>
+Since we know this is an endless flight game, we don't want the player to move too far to the left, right, up, or down but we want them to have enough free movement that they can dodge the obstacles. So we will give these a rough value of 10, we can modify these values as needed when we test the game play later on.
+
+Left X has a max value of -10.
+Right X has a max value of 10.
+Upper Y has a max value of 10.
+Lower Y has a max value of -10.
+
+Since we know this will be in a class of its own, we also need to make sure the class is set to have the ability to be serialized.
+<pre class="lang:default decode:true ">using UnityEngine;
+using System.Collections;
+
+[System.Serializable]
+public class Boundary
+{
+    public float xMin, xMax, yMin, yMax;
+}</pre>
+System.Serialializable being attached to this class will allow us to modify the data in the class that calls this one in the Unity editor. More on this later.
+<h5>Section 2: Player Controller</h5>
+The player controller only needs to store the methods for moving the player around on the screen.
+<pre class="lang:default decode:true">using UnityEngine;
+using System.Collections;
+
+public class PlayerController : MonoBehaviour
+{
+    public Boundary boundary;
+    public Rigidbody stiffBody;
+    public float tilt;
+    public float speed;
+
+    void Update()
+    {
+        var horizontal = Input.GetAxis("Horizontal");
+        var vertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(horizontal, vertical, 0f);
+        stiffBody.velocity = movement * speed;
+
+        stiffBody.position = new Vector3
+        (
+            Mathf.Clamp(stiffBody.position.x, boundary.xMin, boundary.xMax),
+            Mathf.Clamp(stiffBody.position.y, boundary.yMin, boundary.yMax)
+        );
+
+        stiffBody.rotation = Quaternion.Euler(0.0f, 0.0f, stiffBody.velocity.x * -tilt);
+    }
+}</pre>
+As you can see, we called the Boundary class within the player controller, although we have not specified the data directly in the code. You may not be familiar with the implementation of the Vector3 we have in this code.
+This allows us to more explicitly state what we want the vector 3 values to be, since I only have 2 items in it, it defaults to Vector3(float x, float y). Mathf.Clamp allows you to clamp a value between a minimum float and maximum float value. Quaternion.Eurler is used to return a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+<h6>Section 3: Missile Controller</h6>
+The missile controller will house the methods and algorithms for when and how the missiles will spawn.
+<pre class="lang:default decode:true">using UnityEngine;
+using System.Collections;
+
+public class MissileController : MonoBehaviour
+{
+    public GameObject hazard;
+
+    private float spawnWait = 1f;
+
+    void Start()
+    {
+        StartCoroutine(SpawnWaves());
+    }
+
+    IEnumerator SpawnWaves()
+    {
+        while (true)
+        {
+            var xMinMax = Random.Range(-15f, 20f);
+            Vector3 spawnPosition = new Vector3(xMinMax, 10f, 25f);
+            Quaternion spawnRotation = Quaternion.Euler(new Vector3(90f,0f,0f));
+            Instantiate(hazard, spawnPosition, spawnRotation);
+            yield return new WaitForSeconds(spawnWait);
+            spawnWait -= 0.01f;
+            if (spawnWait &lt; 0.05f) spawnWait = 0.05f;
+        }
+    }
+}
+</pre>
+IEnumerator is Unity's version of parallel programming and it is supposed to be used in conjunction with StartCoRoutine.
+<h5>Section 4: Destroying Objects</h5>
+We now need a way to make sure the player ship and the missile that hit the ship is destroyed when the collision has been detected. We also want to make sure the spawned missiles will automatically be destroyed after a certain time has passed.
+<pre class="lang:default decode:true ">using UnityEngine;
+using System.Collections;
+
+public class DestroyMissile : MonoBehaviour
+{
+    public float lifetime;
+
+    void Start()
+    {
+        Destroy(gameObject, lifetime);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Destroy(other.gameObject);
+        Destroy(gameObject);
+    }
+}
+</pre>
+We have 2 separate destroy capabilities in this code. The first one, inside of the Start method will destroy the specified game object at the appropriate time frame which we will specify as 5 seconds. OnTriggerEnter is called when the Collider <code class="varname">other</code> enters the trigger. Basically, when one of the specified objects collide with a different object or another object of the same type; The object is destroyed.
+<h6>Section 5: Adding life to the background</h6>
+We should make it so that our plane with the fractal image scrolls to simulate a flying ship. It adds some life to the game, although it is not 100% needed. There are two ways we could do this, one would be attaching it to player movement or by creating a script to handle it alone. I opted for the standalone script due to the fact that the player is supposed to dodge obstacles and isn’t going to constantly be moving.
+<pre class="lang:default decode:true ">using UnityEngine;
+using System.Collections;
+
+public class ScrollPlane : MonoBehaviour
+{
+    public MeshRenderer rend;
+
+    private float scrollSpeed = 0.5F;
+
+    void Start()
+    {
+        rend = GetComponent&lt;MeshRenderer&gt;();
+    }
+    void Update()
+    {
+        float offset = -Time.time * scrollSpeed;
+        rend.material.SetTextureOffset("_MainTex", new Vector2(0, offset));
+    }
+}</pre>
+&nbsp;
+
+Now that we have some of our back end done, let’s start building it with Unity.
+<h5>Part 3: Using Unity to build out the game</h5>
+The fun part is about to begin, we will now attach scripts to their rightful places and test to make sure everything works out according to plan. We all know that bugs can happen or items could be placed in the correct area.
+<h6>Step 1:</h6>
+Attach the Player script to the Jet. We want the player to control the Jet, we also want the Jet to move independently from the camera.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen1/" rel="attachment wp-att-3722"><img class="alignnone size-full wp-image-3722" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen1.png" alt="Part2Screen1" width="1366" height="768" /></a>
+
+The script says we need a rigid body component, so we should add that to our jet via add component, physics, rigid body.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen2/" rel="attachment wp-att-3723"><img class="alignnone size-full wp-image-3723" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen2.png" alt="Part2Screen2" width="1366" height="768" /></a>
+
+Make sure to set angular drag to 0, and uncheck the use gravity property.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen3/" rel="attachment wp-att-3724"><img class="alignnone size-full wp-image-3724" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen3.png" alt="Part2Screen3" width="1366" height="768" /></a>
+
+Now we can drag the jet game object onto the stiff body in the player controller. We also need to set our x min and y min to be -10. X max and y max should be 10. Tilt should be set at 5, and speed should be 10.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen4/" rel="attachment wp-att-3725"><img class="alignnone size-full wp-image-3725" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen4.png" alt="Part2Screen4" width="1366" height="768" /></a>
+<h6>Step 2:</h6>
+Moving on to the Missile prefab. We should click on it and add component, script, destroy missile.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen5/" rel="attachment wp-att-3726"><img class="alignnone size-full wp-image-3726" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen5.png" alt="Part2Screen5" width="1366" height="768" /></a>
+
+Change the Lifetime property to be 5. We want the missile to last for 5 seconds before it destroys itself off screen.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen6/" rel="attachment wp-att-3727"><img class="alignnone size-full wp-image-3727" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen6.png" alt="Part2Screen6" width="1366" height="768" /></a>
+<h6>Step 3:</h6>
+Create an empty Game Object in the hierarchy pane and rename it to Game Controller. (Note: You don’t have to change the x, y, z coordinates for this; I chose to because I am neurotic.)
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen7/" rel="attachment wp-att-3728"><img class="alignnone size-full wp-image-3728" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen7.png" alt="Part2Screen7" width="1366" height="768" /></a>
+
+Add component, script, missile controller or drag and drop the missile controller script onto Game Controller.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen8/" rel="attachment wp-att-3729"><img class="alignnone size-full wp-image-3729" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen8.png" alt="Part2Screen8" width="1366" height="768" /></a>
+
+Attach the Missile prefab to the Hazard property in the Inspector Pane.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen9/" rel="attachment wp-att-3730"><img class="alignnone size-full wp-image-3730" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen9.png" alt="Part2Screen9" width="1366" height="768" /></a>
+<h6>Step 4:</h6>
+Select the Plane object and add the scroll plane script to it.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen10/" rel="attachment wp-att-3731"><img class="alignnone size-full wp-image-3731" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen10.png" alt="Part2Screen10" width="1366" height="768" /></a>
+
+drag the plane from the hierarchy pane to the rend property in the Inspector pane.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen11/" rel="attachment wp-att-3732"><img class="alignnone size-full wp-image-3732" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen11.png" alt="Part2Screen11" width="1366" height="768" /></a>
+<h6>Step 5:</h6>
+Run the game and let’s see how it goes.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen12/" rel="attachment wp-att-3733"><img class="alignnone size-full wp-image-3733" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen12.png" alt="Part2Screen12" width="1366" height="768" /></a>
+
+Whoops, looks like something is over writing our jet’s z position. This is why testing is important. We all make mistakes, including myself. So, let’s go back over the player controller script to see where the problem lies.
+
+The problem does not lie in the code, rather, it lies in the constraints section of the Rigid body component. We need to make sure that we freeze the position and rotation on the z axis.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen13/" rel="attachment wp-att-3734"><img class="alignnone size-full wp-image-3734" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen13.png" alt="Part2Screen13" width="1366" height="768" /></a>
+
+Now, this isn’t too much of a game currently even though it runs correctly now. We need to add some collisions to make the hazards… Well… hazardous!
+<h6>Step 6:</h6>
+Select the Jet and add component, physics, box collider.
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen15/" rel="attachment wp-att-3736"><img class="alignnone size-full wp-image-3736" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen15.png" alt="Part2Screen15" width="1366" height="768" /></a>
+
+Switch from game to scene view to take a look at how the box collider would be around the Jet.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen15/" rel="attachment wp-att-3736"><img class="alignnone size-full wp-image-3736" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen15.png" alt="Part2Screen15" width="1366" height="768" /></a>
+
+Set the size to be as followed. X 68, Y 10, Z 68 and put a check in the box for is trigger.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen16/" rel="attachment wp-att-3737"><img class="alignnone size-full wp-image-3737" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen16.png" alt="Part2Screen16" width="1366" height="768" /></a>
+
+We now need to do essentially the same thing with the Missile. I suggest you put a copy of the prefab on screen for editing.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen17/" rel="attachment wp-att-3738"><img class="alignnone size-full wp-image-3738" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen17.png" alt="Part2Screen17" width="1366" height="768" /></a>
+
+Add the box collider component to it and Unity should auto size it to be perfect. Make sure Is Trigger is checked.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen18/" rel="attachment wp-att-3739"><img class="alignnone size-full wp-image-3739" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen18.png" alt="Part2Screen18" width="1366" height="768" /></a>
+
+Click the apply button at the top of the inspector pane. This will save the changes to the prefab itself.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen19/" rel="attachment wp-att-3740"><img class="alignnone size-full wp-image-3740" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen19.png" alt="Part2Screen19" width="1366" height="768" /></a>
+
+Now you can delete the Missile from the hierarchy pane.
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/part2screen20/" rel="attachment wp-att-3741"><img class="alignnone size-full wp-image-3741" src="https://gamedevacademy.org/wp-content/uploads/2016/04/Part2Screen20.png" alt="Part2Screen20" width="1366" height="768" /></a>
+
+Here are the final results:
+
+<a href="https://gamedevacademy.org/how-to-make-a-game-in-unity3d-part-2/boomgoesthevoxel/" rel="attachment wp-att-3742"><img class="alignnone size-full wp-image-3742" src="https://gamedevacademy.org/wp-content/uploads/2016/04/BoomGoesTheVoxel.gif" alt="BoomGoesTheVoxel" width="320" height="240" /></a>
+
+Side Note:
+
+If Unity keeps giving you issues about the rigid body component on the Missile, you can delete the code that references it in the Missile Controller Script or simply remove the rigid body from the missile in the Unity editor.
+
+Revision to the code for the missile controller, in case you want to go that route.
+<pre class="lang:default decode:true ">using UnityEngine;
+using System.Collections;
+
+public class MissileController : MonoBehaviour
+{
+    public GameObject hazard;
+
+    private float spawnWait = 1f;
+
+    void Start()
+    {
+        StartCoroutine(SpawnWaves());
+    }
+
+    IEnumerator SpawnWaves()
+    {
+        while (true)
+        {
+            var xMinMax = Random.Range(-15f, 20f);
+            Vector3 spawnPosition = new Vector3(xMinMax, 10f, 25f);
+            Quaternion spawnRotation = Quaternion.Euler(new Vector3(90f,0f,0f));
+            Instantiate(hazard, spawnPosition, spawnRotation);
+            yield return new WaitForSeconds(spawnWait);
+            spawnWait -= 0.01f;
+            if (spawnWait &lt; 0.05f) spawnWait = 0.05f;
+        }
+    }
+}</pre>
+Well, that’s it for today. To reiterate what we have gone over, we have set up the basic game skeleton for the game play. We expanded upon it by adding and writing the scripts needed for the game play. We added all of the images and models we needed for the basic game play as well.  Part 3 will cover the remaining portions for making this a full on game. I hope to see you there. May your code be robust and bug free, This is Jesse signing out.
